@@ -2,13 +2,16 @@ import React, { FC } from 'react'
 import { useAppDispatch } from '@store/index'
 import { LogoutService } from '@services/auth/logout'
 import { setUserAuth } from '@store/slices'
+import { useNavigate } from 'react-router-dom'
 
 export const ToolTip: FC = () => {
+  const navigation = useNavigate()
   const dispatch = useAppDispatch()
 
-  const handleLogout = () => {
-    LogoutService()
+  const handleLogout = async () => {
+    await LogoutService()
     dispatch(setUserAuth(false))
+    navigation('/')
   }
 
   return (

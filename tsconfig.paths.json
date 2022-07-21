@@ -11,7 +11,10 @@
       "@tools/*": ["src/tools/*"],
       "@axios/*": ["src/axios/*"],
       "@services/*": ["src/services/*"],
-      "@utils/*": ["src/utils/*"]
+      "@utils/*": ["src/utils/*"],
+      "@pages/*": ["src/pages/*"],
+      "@navigation/*": ["src/navigation/*"],
+      "@templates/*": ["src/templates/*"]
     }
   }
 }

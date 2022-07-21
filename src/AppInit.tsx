@@ -1,10 +1,22 @@
 import React, {
-  FC, useEffect
+  FC,
+  useCallback,
+  useEffect
 } from 'react'
-import { Header } from '@components/Header'
 import { useAppDispatch } from '@store/index'
 import { setUserAuth } from '@store/slices'
 import { getCookie } from '@utils/cookie'
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes
+} from 'react-router-dom'
+import {
+  navigationRoutes,
+  navigationSecureRoutes
+} from '@navigation/index'
+import { MainTemplate } from '@templates/index'
 
 export const AppInit: FC = () => {
   const dispatch = useAppDispatch()
@@ -15,12 +27,33 @@ export const AppInit: FC = () => {
     }
   }, [])
 
-  return (
-    <div className='h-screen w-screen bg-fuchsia-50'>
-      <Header />
-      <div className='pl-5 pr-5'>
+  const renderRoutes = useCallback(() => {
+    const resultRoutes = [ ...navigationRoutes ]
 
-      </div>
-    </div>
+    if(getCookie('token')){
+      resultRoutes.push(...navigationSecureRoutes)
+    }
+
+    return resultRoutes.map((item, index) => (
+      <Route
+        key={`${item.path}__${index}`}
+        path={item.path}
+        element={<item.component />}
+      />
+    ))
+  }, [])
+
+  return (
+    <BrowserRouter>
+      <MainTemplate>
+        <Routes>
+          {renderRoutes()}
+          <Route
+            path="*"
+            element={<Navigate to="/" />}
+          />
+        </Routes>
+      </MainTemplate>
+    </BrowserRouter>
   )
 }
