@@ -4,7 +4,7 @@ import {
   RegisterForm
 } from './components'
 
-import CloseIcon from '@mui/icons-material/Close'
+import { ModalContainer } from '@components/UI/containers'
 
 interface AuthModalProps {
   register: boolean;
@@ -25,27 +25,21 @@ export const AuthModal: FC<AuthModalProps> = ({
   }
 
   return (
-    <div className='absolute z-10 bg-black/[.5] top-0 left-0 right-0 bottom-0 flex items-center justify-center'>
-      <div className='relative pl-20 pr-20 pt-10 pb-10 bg-white rounded-lg flex items-center flex-col'>
+    <ModalContainer handleClose={handleClose}>
+      {register
+        ? <LoginForm handleClose={handleClose} />
+        : <RegisterForm handleChangeRegister={handleChangeRegister} />
+      }
+
+      <div className='flex mt-5 gap-2'>
+        <span>{register ? 'Нет аккаунта?' : 'Уже есть аккаунт?'}</span>
         <button
-          onClick={handleClose}
-          className='absolute right-3 top-3'
+          className='text-blue-900'
+          onClick={handleChangeRegister}
         >
-          <CloseIcon />
+          {register ? 'Зарегистрироваться' : 'Войти'}
         </button>
-
-        {register ? <LoginForm /> : <RegisterForm />}
-
-        <div className='flex mt-5 gap-2'>
-          <span>{register ? 'Нет аккаунта?' : 'Уже есть аккаунт?'}</span>
-          <button
-            className='text-blue-900'
-            onClick={handleChangeRegister}
-          >
-            {register ? 'Зарегистрироваться' : 'Войти'}
-          </button>
-        </div>
       </div>
-    </div>
+    </ModalContainer>
   )
 }

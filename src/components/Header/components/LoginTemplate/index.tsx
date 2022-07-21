@@ -2,7 +2,7 @@ import React, {
   FC,
   useState
 } from 'react'
-import { AuthModal } from '@components/UI/modals/AuthModal'
+import { AuthModal } from '@components/common/modals/AuthModal'
 
 export const LoginTemplate: FC = () => {
   const [ isShowModal, setIsShowModal ] = useState(false)

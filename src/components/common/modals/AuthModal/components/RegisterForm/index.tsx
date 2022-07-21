@@ -1,16 +1,24 @@
-import React, { FC } from 'react'
+import React, {
+  FC,
+  useState
+} from 'react'
 import {
   SubmitHandler,
   useForm
 } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { TextField } from '@mui/material'
+import { RegisterService } from '@services/auth/register'
 import * as yup from 'yup'
 
 interface Form {
     email: string;
     password: string;
     repeatPassword: string;
+}
+
+interface RegisterFormProps {
+    handleChangeRegister: () => void
 }
 
 const schema = yup.object().shape({
@@ -20,12 +28,31 @@ const schema = yup.object().shape({
     .oneOf([ yup.ref('password'), null ], 'Пароли не совпадают')
 })
 
-export const RegisterForm: FC = () => {
+export const RegisterForm: FC<RegisterFormProps> = ({ handleChangeRegister }) => {
+  const [ error, setError ] = useState('')
+  const [ access, setAccess ] = useState('')
   const {
     register, handleSubmit, formState: { errors }
   } = useForm<Form>({ resolver: yupResolver(schema) })
 
-  const onSubmit: SubmitHandler<Form> = data => console.log(data)
+  const onSubmit: SubmitHandler<Form> = async ({
+    email,
+    password
+  }) => {
+    setAccess('')
+    setError('')
+
+    const data = await RegisterService(email, password)
+
+    if(data.error){
+      return setError(data.error)
+    }
+
+    setAccess(data.message)
+    setTimeout(() => {
+      handleChangeRegister()
+    }, 500)
+  }
 
   return (
     <>
@@ -55,7 +82,7 @@ export const RegisterForm: FC = () => {
           {...register('repeatPassword')}
           helperText={errors.repeatPassword && errors.repeatPassword.message}
           error={!!errors.repeatPassword}
-          label='Пароль'
+          label='Подтверждение пароля'
           type='password'
           variant='standard'
           fullWidth
@@ -68,6 +95,9 @@ export const RegisterForm: FC = () => {
       >
           Зарегистрироваться
       </button>
+
+      {access && <span className='text-green-500'>{access}</span>}
+      {error && <span className='text-red-500'>{error}</span>}
     </>
   )
 }

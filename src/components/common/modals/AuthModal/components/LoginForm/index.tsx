@@ -1,4 +1,7 @@
-import React, { FC } from 'react'
+import React, {
+  FC,
+  useState
+} from 'react'
 import {
   SubmitHandler,
   useForm
@@ -6,10 +9,17 @@ import {
 import { yupResolver } from '@hookform/resolvers/yup'
 import { TextField } from '@mui/material'
 import * as yup from 'yup'
+import { LoginService } from '@services/auth/login'
+import { useAppDispatch } from '@store/index'
+import { setUserAuth } from '@store/slices'
 
 interface Form {
     email: string;
     password: string;
+}
+
+interface LoginFormProps {
+    handleClose: () => void
 }
 
 const schema = yup.object().shape({
@@ -17,12 +27,32 @@ const schema = yup.object().shape({
   password: yup.string().required('Введите пароль')
 })
 
-export const LoginForm: FC = () => {
+export const LoginForm: FC<LoginFormProps> = ({ handleClose }) => {
+  const [ access, setAccess ] = useState('')
+  const [ error, setError ] = useState('')
   const {
     register, handleSubmit, formState: { errors }
   } = useForm<Form>({ resolver: yupResolver(schema) })
 
-  const onSubmit: SubmitHandler<Form> = data => console.log(data)
+  const dispatch = useAppDispatch()
+
+  const onSubmit: SubmitHandler<Form> = async ({
+    email, password
+  }) => {
+    setAccess('')
+    setError('')
+    const data = await LoginService(email, password)
+
+    if(data.error){
+      return setError(data.error)
+    }
+
+    setAccess(data.message)
+    setTimeout(() => {
+      handleClose()
+      dispatch(setUserAuth(true))
+    }, 500)
+  }
 
   return (
     <>
@@ -55,6 +85,11 @@ export const LoginForm: FC = () => {
       >
           Войти
       </button>
+
+      <div className='mt-2'>
+        {access && <span className='text-green-500'>{access}</span>}
+        {error && <span className='text-red-500'>{error}</span>}
+      </div>
     </>
   )
 }

@@ -1,13 +1,12 @@
 import React, { FC } from 'react'
-import { Header } from '@components/index'
+import { Provider } from 'react-redux'
+import { AppInit } from './AppInit'
+import store from '@store/index'
 
 const App: FC = () => (
-  <div className='h-screen w-screen bg-fuchsia-50'>
-    <Header />
-    <div className='pl-5 pr-5'>
-
-    </div>
-  </div>
+  <Provider store={store}>
+    <AppInit />
+  </Provider>
 )
 
 export default App

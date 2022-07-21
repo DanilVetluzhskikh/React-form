@@ -8,7 +8,10 @@
       "@store/*": ["src/store/*"],
       "@interfaces/*": ["src/interfaces/*"],
       "@constants/*": ["src/constants/*"],
-      "@tools/*": ["src/tools/*"]
+      "@tools/*": ["src/tools/*"],
+      "@axios/*": ["src/axios/*"],
+      "@services/*": ["src/services/*"],
+      "@utils/*": ["src/utils/*"]
     }
   }
 }
