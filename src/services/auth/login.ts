@@ -10,6 +10,7 @@ export const LoginService = async (email: string, password: string) => {
     })
 
     setCookie('token', response.data.token, { 'max-age': 86400 })
+    setCookie('userId', response.data.id, { 'max-age': 86400 })
 
     return response.data
   }

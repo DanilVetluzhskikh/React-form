@@ -1,10 +1,14 @@
 import React, {
   FC,
-  useCallback,
   useEffect
 } from 'react'
-import { useAppDispatch } from '@store/index'
-import { setUserAuth } from '@store/slices'
+import {
+  useAppDispatch, useAppSelector
+} from '@store/index'
+import {
+  getUserAuth,
+  setUserAuth
+} from '@store/slices'
 import { getCookie } from '@utils/cookie'
 import {
   BrowserRouter,
@@ -18,19 +22,23 @@ import {
 } from '@navigation/index'
 import { MainTemplate } from '@templates/index'
 
+const token = getCookie('token')
+const userId = getCookie('userId')
+
 export const AppInit: FC = () => {
   const dispatch = useAppDispatch()
+  const auth = useAppSelector(getUserAuth)
 
   useEffect(() => {
-    if(getCookie('token')){
+    if(token && userId){
       dispatch(setUserAuth(true))
     }
   }, [])
 
-  const renderRoutes = useCallback(() => {
+  const renderRoutes = () => {
     const resultRoutes = [ ...navigationRoutes ]
 
-    if(getCookie('token')){
+    if(auth){
       resultRoutes.push(...navigationSecureRoutes)
     }
 
@@ -41,7 +49,7 @@ export const AppInit: FC = () => {
         element={<item.component />}
       />
     ))
-  }, [])
+  }
 
   return (
     <BrowserRouter>

@@ -1,7 +1,8 @@
 import { FC } from 'react'
 import {
   Create,
-  Main
+  Main,
+  Profile
 } from '@pages/index'
 
 export type NavigationRoute = {
@@ -20,5 +21,9 @@ export const navigationSecureRoutes: NavigationRoute[] = [
   {
     path: '/create',
     component: Create
+  },
+  {
+    path: '/profile',
+    component: Profile
   }
 ]
