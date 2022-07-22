@@ -38,7 +38,7 @@ export const AppInit: FC = () => {
   const renderRoutes = () => {
     const resultRoutes = [ ...navigationRoutes ]
 
-    if(auth){
+    if(auth || token){
       resultRoutes.push(...navigationSecureRoutes)
     }
 
